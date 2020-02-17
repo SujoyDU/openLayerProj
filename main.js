@@ -13,7 +13,8 @@ function init(){
                 source: new ol.source.OSM()
             })
         ],
-        target: 'js-map'      
+        target: 'js-map',      
+        keyboardEventTarget: document
     })
 
     const popupContainerElement = document.getElementById('popup-coordinates');
@@ -24,11 +25,31 @@ function init(){
    
     map.addOverlay(popup);
 
-   map.on('click', function(e) {
-       const clickedCoordinate = e.coordinate;
-       popup.setPosition(undefined);
-       popup.setPosition(clickedCoordinate);
-       popupContainerElement.innerHTML = clickedCoordinate;
+    map.on('click', function(e) {
+        const clickedCoordinate = e.coordinate;
+        popup.setPosition(undefined);
+        popup.setPosition(clickedCoordinate);
+        popupContainerElement.innerHTML = clickedCoordinate;
 
+    })
+
+    //dragRotate Interaction
+    const dragRotateInteraction = new ol.interaction.DragRotate({
+        condition: ol.events.condition.altKeyOnly
+    })
+
+    map.addInteraction(dragRotateInteraction);
+
+    const drawInteraction = new ol.interaction.Draw({
+        type: 'Polygon',
+        freehand: true
+    })
+
+    map.addInteraction(drawInteraction);
+
+    drawInteraction.on('drawend', function(e){
+        let parser = new ol.format.GeoJSON();
+        let drawnFeatures = parser.writeFeaturesObject([e.feature]);
+        console.log(drawnFeatures);
     })
 }
