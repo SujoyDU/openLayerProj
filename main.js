@@ -19,7 +19,7 @@ function init(){
         view: new ol.View({
             center: [-12080385,7567433],
             zoom: 3,
-            maxZoom: 6,
+            maxZoom: 10,
             minZoom: 1,
             rotation: 0
         }),
